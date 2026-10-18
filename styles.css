@@ -48,7 +48,7 @@ h1 span { color: var(--purple); }
 .hero-greeting:hover, .hero-greeting:focus-visible { outline: none; }
 .hero-greeting.is-vibrating { animation: hero-vibrate .32s ease-in-out; }
 @keyframes hero-vibrate { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-3px); } 40% { transform: translateX(3px); } 60% { transform: translateX(-2px); } 80% { transform: translateX(2px); } }
-.hero-greeting span { display: block; color: #c53b2f; transition: color .18s ease; font-family: 'Yatra One', 'Noto Sans Devanagari', var(--display); font-size: .94em; line-height: 1.12; letter-spacing: .015em; }
+.hero-greeting span { display: block; color: #c53b2f; transition: color .18s ease; font-family: 'Yatra One', 'Noto Sans Devanagari', var(--display); font-size: clamp(28px, 7vw, .94em); line-height: 1.12; letter-spacing: .015em; white-space: nowrap; }
 .hero-greeting.quadrant-cool { color: #16734b; }
 .hero-greeting.quadrant-cool span { color: #205fa8; }
 .hero-greeting.quadrant-warm { color: #1b1714; }
