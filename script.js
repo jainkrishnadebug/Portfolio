@@ -10,16 +10,18 @@ function renderSearchControls() {
     controls.appendChild(trigger);
   }
 
-  const shortcut = trigger.querySelector('#search-shortcut');
-  const existingShortcutPanel = document.querySelector('#search-shortcut-wrap');
-  if (existingShortcutPanel) existingShortcutPanel.remove();
-  else if (shortcut) shortcut.remove();
+  const shortcut = trigger.querySelector('#search-shortcut') || controls.querySelector('#search-shortcut');
+  const existingShortcutPanel = controls.querySelector('.search-shortcut');
+
+  if (existingShortcutPanel && trigger.querySelector('.search-symbol')) return;
+
+  if (!existingShortcutPanel && shortcut) shortcut.remove();
 
   if (!trigger.querySelector('.search-symbol')) {
     trigger.innerHTML = '<svg class="search-symbol" aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="2" /><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" /></svg>';
   }
 
-  if (shortcut) {
+  if (shortcut && !existingShortcutPanel) {
     const shortcutPanel = document.createElement('span');
     shortcutPanel.className = 'search-shortcut';
     shortcutPanel.id = 'search-shortcut-wrap';
