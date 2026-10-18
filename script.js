@@ -3,6 +3,53 @@ const searchInput = document.querySelector('#search-input');
 const searchTrigger = document.querySelector('.search-trigger');
 const closeButton = document.querySelector('.dialog-close');
 
+// Gives selected text a stable, comic-lettering feel by mixing three fonts per character.
+function renderMixedFonts(selector = '[data-font-mix]', options = {}) {
+  const fonts = options.fonts || ['Syne', 'Space Grotesk', 'DM Mono'];
+  const seed = options.seed || 731;
+  const targets = typeof selector === 'string' ? document.querySelectorAll(selector) : selector;
+
+  targets.forEach((target, targetIndex) => {
+    const random = (() => {
+      let value = (seed + targetIndex * 997) >>> 0;
+      return () => {
+        value = (value * 1664525 + 1013904223) >>> 0;
+        return value / 4294967296;
+      };
+    })();
+    const textNodes = [];
+    const walker = document.createTreeWalker(target, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) textNodes.push(node);
+
+    textNodes.forEach((textNode) => {
+      const fragment = document.createDocumentFragment();
+      textNode.nodeValue.split(/(\s+)/).forEach((token) => {
+        if (/\s+/.test(token)) {
+          fragment.appendChild(document.createTextNode(token));
+          return;
+        }
+        const word = document.createElement('span');
+        word.className = 'font-mix-word';
+        Array.from(token).forEach((character) => {
+          const letter = document.createElement('span');
+          const fontIndex = Math.floor(random() * fonts.length);
+          letter.className = `font-mix-char font-mix-font-${fontIndex}`;
+          letter.textContent = character;
+          letter.style.setProperty('--char-tilt', `${((random() - 0.5) * 2.4).toFixed(2)}deg`);
+          letter.style.setProperty('--char-scale', (0.96 + random() * 0.08).toFixed(3));
+          word.appendChild(letter);
+        });
+        fragment.appendChild(word);
+      });
+      textNode.replaceWith(fragment);
+    });
+  });
+}
+
+window.renderMixedFonts = renderMixedFonts;
+renderMixedFonts();
+
 function openSearch() {
   if (!dialog.open) dialog.showModal();
   window.setTimeout(() => searchInput.focus(), 50);
