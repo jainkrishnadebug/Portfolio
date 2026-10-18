@@ -1,3 +1,33 @@
+function renderSearchControls() {
+  const trigger = document.querySelector('.search-trigger');
+  if (!trigger) return;
+
+  let controls = trigger.closest('.search-controls');
+  if (!controls) {
+    controls = document.createElement('div');
+    controls.className = 'search-controls';
+    trigger.parentNode.insertBefore(controls, trigger);
+    controls.appendChild(trigger);
+  }
+
+  if (!trigger.querySelector('.search-symbol')) {
+    trigger.innerHTML = '<svg class="search-symbol" aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="2" /><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" /></svg>';
+  }
+
+  const shortcut = trigger.querySelector('#search-shortcut');
+  if (shortcut && !shortcut.closest('.search-shortcut')) {
+    const shortcutPanel = document.createElement('span');
+    shortcutPanel.className = 'search-shortcut';
+    shortcutPanel.id = 'search-shortcut-wrap';
+    shortcut.replaceWith(shortcutPanel);
+    shortcutPanel.appendChild(shortcut);
+    controls.appendChild(shortcutPanel);
+  }
+}
+
+window.renderSearchControls = renderSearchControls;
+renderSearchControls();
+
 const dialog = document.querySelector('#search-dialog');
 const searchInput = document.querySelector('#search-input');
 const searchTrigger = document.querySelector('.search-trigger');
