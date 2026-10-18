@@ -25,11 +25,13 @@ button, input { font: inherit; }
 .nav-link:hover, .nav-link.is-active { color: var(--ink); }
 .nav-link.is-active { font-size: 22px; letter-spacing: -.06em; }
 .nav-link.is-active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -10px; height: 2px; background: var(--purple); }
-.search-trigger { display: flex; align-items: center; gap: 14px; border: 1px solid var(--ink); border-radius: 999px; background: linear-gradient(135deg, #fff8d9 0%, #f8d36a 100%); box-shadow: 0 4px 0 rgba(43,27,20,.22), 0 8px 18px rgba(100,61,21,.12); color: var(--ink); padding: 11px 14px 11px 18px; cursor: pointer; font-size: 13px; transition: background .2s ease, transform .2s ease, box-shadow .2s ease; }
+.search-controls { display: flex; align-items: center; gap: 14px; }
+.search-trigger { display: grid; place-items: center; width: 58px; height: 46px; border: 1px solid var(--ink); border-radius: 16px; background: linear-gradient(135deg, #fff8d9 0%, #f8d36a 100%); box-shadow: 0 4px 0 rgba(43,27,20,.22), 0 8px 18px rgba(100,61,21,.12); color: var(--ink); padding: 0; cursor: pointer; transition: background .2s ease, transform .2s ease, box-shadow .2s ease; }
 .search-trigger:hover { background: linear-gradient(135deg, #fffdf0 0%, #ffd85e 100%); transform: translateY(-3px); box-shadow: 0 7px 0 rgba(43,27,20,.22), 0 12px 22px rgba(100,61,21,.18); }
 .search-trigger:active { transform: translateY(1px); box-shadow: 0 2px 0 rgba(43,27,20,.22), 0 4px 10px rgba(100,61,21,.12); }
 .search-trigger:focus-visible { outline: 3px solid rgba(197,59,47,.42); outline-offset: 4px; }
-kbd { border: 1px solid rgba(43,27,20,.45); border-radius: 6px; padding: 3px 7px; background: rgba(255,255,255,.45); box-shadow: inset 0 -1px 0 rgba(43,27,20,.15); font: 10px var(--mono); }
+.search-shortcut { display: flex; align-items: center; height: 46px; padding: 0 16px; border: 1px solid var(--ink); background: rgba(255,248,217,.72); box-shadow: 0 4px 0 rgba(43,27,20,.12); color: var(--ink); }
+kbd { border: 0; padding: 0; background: transparent; box-shadow: none; font: 12px var(--mono); }
 .search-symbol { width: 21px; height: 21px; display: block; }
 .about-layout { flex: 1; display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(280px, .75fr); gap: clamp(50px, 10vw, 160px); align-items: center; padding: clamp(55px, 8vw, 110px) 7% 70px; }
 .simple-page { flex: 1; min-height: calc(100vh - 180px); display: grid; place-items: center; padding: 70px 7%; }

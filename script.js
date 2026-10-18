@@ -74,11 +74,12 @@ if (monthYear) {
 }
 
 const searchShortcut = document.querySelector('#search-shortcut');
+const searchShortcutWrap = document.querySelector('#search-shortcut-wrap');
 if (searchShortcut) {
   const userAgent = navigator.userAgent.toLowerCase();
   const isAndroid = userAgent.includes('android');
   const isApple = /mac|iphone|ipad|ipod/.test(userAgent);
-  if (isAndroid) searchShortcut.hidden = true;
+  if (isAndroid) searchShortcutWrap.hidden = true;
   else searchShortcut.textContent = isApple ? '⌘ K' : 'Ctrl K';
 }
 
