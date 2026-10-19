@@ -13,6 +13,7 @@ const {
   description = 'Krishna Jain — mechanical engineering, computation, research, and useful systems.'
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
+const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/lego-greeting-0${index + 1}.webp`);
 ---
 <!doctype html>
 <html lang="en">
@@ -23,6 +24,7 @@ const base = import.meta.env.BASE_URL;
     <meta name="theme-color" content="#f4c542" />
     <title>{title}</title>
     <link rel="icon" type="image/webp" href={`${base}assets/krishna-avatar.webp`} />
+    {legoFrameUrls.map((href) => <link rel="preload" as="image" href={href} type="image/webp" />)}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;600;700&family=Yatra+One&display=swap" rel="stylesheet" />
@@ -107,10 +109,12 @@ const base = import.meta.env.BASE_URL;
         [`${assetBase}assets/lego-greeting-01.webp`, 10]
       ];
       const greetingFrames = greeting ? [...greeting.querySelectorAll<HTMLImageElement>('.lego-frame')] : [];
+      const greetingReady = Promise.all(greetingFrames.map((frame) => frame.decode().catch(() => undefined)));
       let greetingRunning = false;
       const playGreeting = async () => {
         if (!greeting || greetingRunning) return;
         greetingRunning = true;
+        await greetingReady;
         const setGreetingFrame = (src: string) => {
           greetingFrames.forEach((frame) => frame.classList.toggle('is-active', frame.src.endsWith(src)));
         };
