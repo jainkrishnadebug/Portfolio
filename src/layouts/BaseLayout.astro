@@ -102,11 +102,11 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
       }
       const assetBase = import.meta.env.BASE_URL;
       const greetingImages: Array<[string, number]> = [
-        [`${assetBase}assets/lego-greeting-01.webp`, 25], [`${assetBase}assets/lego-greeting-02.webp`, 75],
-        [`${assetBase}assets/lego-greeting-03.webp`, 50], [`${assetBase}assets/lego-greeting-04.webp`, 50],
-        [`${assetBase}assets/lego-greeting-05.webp`, 400], [`${assetBase}assets/lego-greeting-04.webp`, 25],
-        [`${assetBase}assets/lego-greeting-03.webp`, 25], [`${assetBase}assets/lego-greeting-02.webp`, 25],
-        [`${assetBase}assets/lego-greeting-01.webp`, 10]
+        [`${assetBase}assets/lego-greeting-01.webp`, 75], [`${assetBase}assets/lego-greeting-02.webp`, 125],
+        [`${assetBase}assets/lego-greeting-03.webp`, 100], [`${assetBase}assets/lego-greeting-04.webp`, 100],
+        [`${assetBase}assets/lego-greeting-05.webp`, 450], [`${assetBase}assets/lego-greeting-04.webp`, 75],
+        [`${assetBase}assets/lego-greeting-03.webp`, 75], [`${assetBase}assets/lego-greeting-02.webp`, 75],
+        [`${assetBase}assets/lego-greeting-01.webp`, 60]
       ];
       const greetingFrames = greeting ? [...greeting.querySelectorAll<HTMLImageElement>('.lego-frame')] : [];
       const greetingReady = Promise.all(greetingFrames.map((frame) => frame.decode().catch(() => undefined)));
