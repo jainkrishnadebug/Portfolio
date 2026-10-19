@@ -1,0 +1,12 @@
+---
+title: Video title
+summary: One sentence describing the video.
+year: 2026
+channel: YouTube
+tags: [demo, explanation]
+videoUrl: https://www.youtube.com/watch?v=example
+---
+
+## About this video
+
+Add context, links, or a transcript excerpt here.

@@ -1,0 +1,18 @@
+---
+title: Project title
+summary: One sentence that explains what this is.
+year: 2026
+tags: [tag one, tag two]
+highlights:
+  - A measurable result or key capability.
+  - The technical approach in one sentence.
+  - Who it helps or what changed.
+featured: false
+status: complete
+githubUrl: https://github.com/your-name/your-project
+externalUrl: https://example.com
+---
+
+## What I built
+
+Describe the problem, approach, result, and what you learned.

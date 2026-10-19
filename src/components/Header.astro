@@ -1,0 +1,40 @@
+---
+const links = [
+  { href: '', label: 'about' },
+  { href: 'projects/', label: 'projects' },
+  { href: 'papers/', label: 'papers' },
+  { href: 'opensource/', label: 'open source' },
+  { href: 'videos/', label: 'videos' },
+  { href: 'cv/', label: 'cv' }
+];
+const currentPath = Astro.url.pathname;
+const base = import.meta.env.BASE_URL;
+---
+<header class="site-header">
+  <a class="brand" href={base} aria-label="Krishna Jain home">
+    <span class="brand-mark" aria-hidden="true"><img src={`${base}assets/krishna-avatar.webp`} alt="" width="42" height="42" decoding="async" /></span>
+  </a>
+  <nav class="main-nav" aria-label="Primary navigation">
+    {links.map((link) => (
+      <a class:list={['nav-link', { 'is-active': currentPath === `${base}${link.href}` || (link.href === '' && currentPath === base) }]} href={`${base}${link.href}`}>{link.label}</a>
+    ))}
+  </nav>
+  <div class="search-controls">
+    <button class="search-trigger" type="button" aria-label="Open search" aria-controls="search-dialog">
+      <svg class="search-symbol" aria-hidden="true" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8" fill="none" stroke="currentColor" stroke-width="2" /><path d="m16 16 5 5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" /></svg>
+    </button>
+    <span class="search-shortcut"><kbd>Ctrl K</kbd></span>
+  </div>
+</header>
+
+<dialog class="search-dialog" id="search-dialog" aria-labelledby="search-title">
+  <div class="dialog-inner">
+    <div class="dialog-topline"><span id="search-title">quick search</span><button class="dialog-close" type="button" aria-label="Close search">esc</button></div>
+    <form class="search-form" method="dialog" action={`${base}projects/`}>
+      <label class="sr-only" for="search-input">Search the site</label>
+      <input id="search-input" type="search" name="q" placeholder="Search projects, papers..." autocomplete="off" />
+      <button type="submit" aria-label="Search">↗</button>
+    </form>
+    <p class="search-hint">Try <span>projects</span>, <span>papers</span>, or a tag.</p>
+  </div>
+</dialog>

@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionHeader from '../../components/CollectionHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+
+const entries = (await getCollection('opensource')).sort((a, b) => (b.data.year || 0) - (a.data.year || 0));
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Open Source — Krishna Jain" description="Open-source work by Krishna Jain.">
+  <div class="archive-page">
+    <CollectionHeader eyebrow="shared with the community" title="Open source" description="Tools, experiments, and code that are more useful out in the world than sitting on a hard drive." />
+    {entries.length > 0 ? <div class="card-grid">{entries.map((entry) => <ContentCard title={entry.data.title} summary={entry.data.summary} href={`${base}opensource/${entry.id}/`} year={entry.data.year} tags={entry.data.tags} meta={entry.data.language || 'repository'} />)}</div> : <EmptyState collection="open-source entry" folder="opensource" />}
+  </div>
+</BaseLayout>

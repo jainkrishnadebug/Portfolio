@@ -1,0 +1,146 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import LegoGreeting from '../components/LegoGreeting.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Krishna Jain — Portfolio',
+  description = 'Krishna Jain — mechanical engineering, computation, research, and useful systems.'
+} = Astro.props;
+const base = import.meta.env.BASE_URL;
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#f4c542" />
+    <title>{title}</title>
+    <link rel="icon" type="image/webp" href={`${base}assets/krishna-avatar.webp`} />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;600;700&family=Yatra+One&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="site-shell">
+      <Header />
+      <main>
+        <slot />
+      </main>
+      <footer class="site-footer">
+        <span>@ <span id="month-year"></span></span>
+        <span class="footer-note">built with curiosity</span>
+      </footer>
+    </div>
+    <LegoGreeting />
+
+    <script>
+      const monthYear = document.querySelector('#month-year');
+      if (monthYear) {
+        monthYear.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' })
+          .format(new Date()).replace(' ', '_');
+      }
+
+      const searchDialog = document.querySelector<HTMLDialogElement>('#search-dialog');
+      const searchInput = document.querySelector<HTMLInputElement>('#search-input');
+      const searchTrigger = document.querySelector<HTMLButtonElement>('.search-trigger');
+      const closeSearch = () => searchDialog?.close();
+      searchTrigger?.addEventListener('click', () => {
+        if (searchDialog && !searchDialog.open) searchDialog.showModal();
+        window.setTimeout(() => searchInput?.focus(), 40);
+      });
+      document.querySelector('.dialog-close')?.addEventListener('click', closeSearch);
+      document.addEventListener('keydown', (event: KeyboardEvent) => {
+        if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+          event.preventDefault();
+          searchTrigger?.click();
+        }
+        if (event.key === 'Escape' && searchDialog?.open) closeSearch();
+      });
+
+      const introTrigger = document.querySelector<HTMLElement>('#profile-intro-trigger');
+      const profilePhoto = document.querySelector<HTMLElement>('#profile-photo');
+      let portraitIndex = 0;
+      const flipPortrait = () => {
+        if (!profilePhoto) return;
+        portraitIndex = (portraitIndex + 1) % 3;
+        profilePhoto.classList.remove('photo-index-1', 'photo-index-2');
+        if (portraitIndex > 0) profilePhoto.classList.add(`photo-index-${portraitIndex}`);
+        const frameNumber = profilePhoto.querySelector('.frame-number');
+        if (frameNumber) frameNumber.textContent = `[ ${String(portraitIndex + 1).padStart(3, '0')} ]`;
+      };
+      profilePhoto?.addEventListener('click', flipPortrait);
+      introTrigger?.addEventListener('click', flipPortrait);
+      [profilePhoto, introTrigger].forEach((element) => element?.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          flipPortrait();
+        }
+      }));
+
+      const greetingTrigger = document.querySelector<HTMLElement>('.hero-greeting');
+      const greeting = document.querySelector<HTMLElement>('.lego-greeting');
+      const brand = document.querySelector<HTMLAnchorElement>('.brand');
+      const updateGreetingQuadrant = (x: number, y: number) => {
+        if (!greetingTrigger) return;
+        const cool = (x < window.innerWidth / 2 && y < window.innerHeight / 2)
+          || (x >= window.innerWidth / 2 && y >= window.innerHeight / 2);
+        greetingTrigger.classList.toggle('quadrant-cool', cool);
+        greetingTrigger.classList.toggle('quadrant-warm', !cool);
+      };
+      if (greetingTrigger) {
+        greetingTrigger.classList.add('quadrant-warm');
+        window.addEventListener('pointermove', (event) => updateGreetingQuadrant(event.clientX, event.clientY), { passive: true });
+      }
+      const assetBase = import.meta.env.BASE_URL;
+      const greetingImages: Array<[string, number]> = [
+        [`${assetBase}assets/lego-greeting-01.webp`, 25], [`${assetBase}assets/lego-greeting-02.webp`, 75],
+        [`${assetBase}assets/lego-greeting-03.webp`, 50], [`${assetBase}assets/lego-greeting-04.webp`, 50],
+        [`${assetBase}assets/lego-greeting-05.webp`, 400], [`${assetBase}assets/lego-greeting-04.webp`, 25],
+        [`${assetBase}assets/lego-greeting-03.webp`, 25], [`${assetBase}assets/lego-greeting-02.webp`, 25],
+        [`${assetBase}assets/lego-greeting-01.webp`, 10]
+      ];
+      const greetingFrames = greeting ? [...greeting.querySelectorAll<HTMLImageElement>('.lego-frame')] : [];
+      let greetingRunning = false;
+      const playGreeting = async () => {
+        if (!greeting || greetingRunning) return;
+        greetingRunning = true;
+        const setGreetingFrame = (src: string) => {
+          greetingFrames.forEach((frame) => frame.classList.toggle('is-active', frame.src.endsWith(src)));
+        };
+        setGreetingFrame(greetingImages[0][0]);
+        greeting.classList.add('is-visible');
+        brand?.classList.add('is-greeting-active');
+        window.setTimeout(() => brand?.classList.remove('is-greeting-active'), 500);
+        greetingTrigger?.classList.add('is-vibrating');
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const speech = new SpeechSynthesisUtterance('hi');
+          speech.rate = 1.00;
+          speech.pitch = 0.1;
+          speech.volume = 0.50;
+          window.speechSynthesis.speak(speech);
+        }
+        for (const [src, duration] of greetingImages) {
+          setGreetingFrame(src);
+          await new Promise((resolve) => window.setTimeout(resolve, duration));
+        }
+        greeting.classList.remove('is-visible');
+        greetingTrigger?.classList.remove('is-vibrating');
+        await new Promise((resolve) => window.setTimeout(resolve, 500));
+        greetingRunning = false;
+      };
+      greetingTrigger?.addEventListener('click', (event) => { event.preventDefault(); playGreeting(); });
+      greetingTrigger?.addEventListener('keydown', (event: KeyboardEvent) => {
+        if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); playGreeting(); }
+      });
+      brand?.addEventListener('click', (event) => { event.preventDefault(); playGreeting(); });
+    </script>
+  </body>
+</html>

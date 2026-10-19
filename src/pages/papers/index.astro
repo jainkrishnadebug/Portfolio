@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionHeader from '../../components/CollectionHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+
+const entries = (await getCollection('papers')).sort((a, b) => (b.data.year || 0) - (a.data.year || 0));
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Papers — Krishna Jain" description="Research papers and technical writing by Krishna Jain.">
+  <div class="archive-page">
+    <CollectionHeader eyebrow="ideas in progress" title="Papers" description="Research notes, technical writing, and questions worth thinking about carefully." />
+    {entries.length > 0 ? <div class="card-grid">{entries.map((entry) => <ContentCard title={entry.data.title} summary={entry.data.summary} href={`${base}papers/${entry.id}/`} year={entry.data.year} tags={entry.data.tags} meta={entry.data.venue || 'paper'} />)}</div> : <EmptyState collection="paper" folder="papers" />}
+  </div>
+</BaseLayout>

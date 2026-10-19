@@ -1,0 +1,11 @@
+---
+interface Props { collection: string; folder: string; }
+const { collection, folder } = Astro.props;
+---
+<div class="empty-state">
+  <span class="empty-number">01</span>
+  <div>
+    <h2>Your {collection} archive starts here.</h2>
+    <p>Add a Markdown file to <code>src/content/{folder}/</code> and this page will build the card and detail page automatically.</p>
+  </div>
+</div>

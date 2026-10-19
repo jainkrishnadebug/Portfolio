@@ -1,0 +1,23 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('videos');
+  return entries.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+const { entry } = Astro.props;
+const base = import.meta.env.BASE_URL;
+const { Content } = await render(entry);
+---
+<BaseLayout title={`${entry.data.title} — Krishna Jain`} description={entry.data.summary}>
+  <article class="detail-page">
+    <a class="back-link" href={`${base}videos/`}>← all videos</a>
+    <p class="eyebrow">{entry.data.channel || 'video'}{entry.data.year ? ` · ${entry.data.year}` : ''}</p>
+    <h1>{entry.data.title}<span>.</span></h1>
+    <p class="detail-summary">{entry.data.summary}</p>
+    <div class="tag-list">{entry.data.tags.map((tag) => <span>{tag}</span>)}</div>
+    <div class="prose"><Content /></div>
+    <a class="button-link" href={entry.data.videoUrl} target="_blank" rel="noreferrer">watch video ↗</a>
+  </article>
+</BaseLayout>

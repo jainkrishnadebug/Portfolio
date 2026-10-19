@@ -1,0 +1,30 @@
+---
+interface Props {
+  entry: any;
+}
+
+const { entry } = Astro.props;
+const { data } = entry;
+const base = import.meta.env.BASE_URL;
+---
+<article class="project-feature">
+  <div class="project-feature-copy">
+    <div class="project-feature-meta">
+      <span>featured project</span>
+      <span>{data.year || 'ongoing'}</span>
+    </div>
+    <h2><a href={`${base}projects/${entry.id}/`}>{data.title}</a></h2>
+    <p class="project-feature-summary">{data.summary}</p>
+    {data.highlights.length > 0 && <ul class="project-highlights">{data.highlights.slice(0, 3).map((highlight: string) => <li>{highlight}</li>)}</ul>}
+    <div class="project-feature-actions">
+      <a class="button-link" href={`${base}projects/${entry.id}/`}>read project ↗</a>
+      {data.githubUrl && <a class="text-action" href={data.githubUrl} target="_blank" rel="noreferrer">code ↗</a>}
+      {data.paperUrl && <a class="text-action" href={data.paperUrl} target="_blank" rel="noreferrer">paper ↗</a>}
+    </div>
+  </div>
+  <div class="project-feature-media" aria-label={`${data.title} visual summary`}>
+    {data.image ? <img src={data.image} alt="" /> : <div class="cube-visual" aria-hidden="true"><span class="cube-face cube-face-top"></span><span class="cube-face cube-face-left"></span><span class="cube-face cube-face-right"></span></div>}
+    <div class="project-feature-media-label"><span>{data.status}</span><span>{data.tags[0] || 'engineering'}</span></div>
+  </div>
+  <div class="project-feature-tags">{data.tags.map((tag: string) => <span>{tag}</span>)}</div>
+</article>

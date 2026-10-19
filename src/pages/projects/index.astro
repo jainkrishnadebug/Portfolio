@@ -1,0 +1,20 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import ProjectFeature from '../../components/ProjectFeature.astro';
+
+const entries = (await getCollection('projects')).sort((a, b) => (b.data.year || 0) - (a.data.year || 0));
+const featuredEntry = entries.find((entry) => entry.data.featured) || entries[0];
+const archiveEntries = featuredEntry ? entries.filter((entry) => entry.id !== featuredEntry.id) : entries;
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Projects — Krishna Jain" description="Projects by Krishna Jain.">
+  <div class="archive-page">
+    {entries.length > 0 ? <>
+      {featuredEntry && <ProjectFeature entry={featuredEntry} />}
+      {archiveEntries.length > 0 && <div class="project-archive-heading"><span>more work</span><span>{archiveEntries.length.toString().padStart(2, '0')} entries</span></div>}
+      {archiveEntries.length > 0 && <div class="card-grid">{archiveEntries.map((entry) => <ContentCard title={entry.data.title} summary={entry.data.summary} href={`${base}projects/${entry.id}/`} year={entry.data.year} tags={entry.data.tags} meta={entry.data.status} image={entry.data.image} />)}</div>}
+    </> : null}
+  </div>
+</BaseLayout>

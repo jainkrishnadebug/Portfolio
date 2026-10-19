@@ -1,0 +1,16 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import CollectionHeader from '../../components/CollectionHeader.astro';
+import ContentCard from '../../components/ContentCard.astro';
+import EmptyState from '../../components/EmptyState.astro';
+
+const entries = (await getCollection('videos')).sort((a, b) => (b.data.year || 0) - (a.data.year || 0));
+const base = import.meta.env.BASE_URL;
+---
+<BaseLayout title="Videos — Krishna Jain" description="Videos by Krishna Jain.">
+  <div class="archive-page">
+    <CollectionHeader eyebrow="watch and listen" title="Videos" description="Talks, demonstrations, explainers, and things I wanted to make visible." />
+    {entries.length > 0 ? <div class="card-grid">{entries.map((entry) => <ContentCard title={entry.data.title} summary={entry.data.summary} href={`${base}videos/${entry.id}/`} year={entry.data.year} tags={entry.data.tags} meta={entry.data.channel || 'video'} />)}</div> : <EmptyState collection="video" folder="videos" />}
+  </div>
+</BaseLayout>
