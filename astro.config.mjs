@@ -6,5 +6,5 @@ export default defineConfig({
     enabled: false
   },
   site: 'https://jainkrishnadebug.github.io',
-  base: '/Portfolio'
+  base: '/Portfolio/'
 });
