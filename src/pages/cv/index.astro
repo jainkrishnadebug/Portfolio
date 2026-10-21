@@ -1,11 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+const base = import.meta.env.BASE_URL;
 ---
-<BaseLayout title="CV — Krishna Jain" description="Curriculum vitae of Krishna Jain.">
+<BaseLayout title="Curriculum Vitae — Krishna Jain" description="Curriculum vitae of Krishna Jain.">
   <div class="simple-page-content cv-page">
-    <p class="eyebrow">experience and skills</p>
-    <h1>CV<span>.</span></h1>
-    <p class="simple-page-note">A living page for experience, skills, and things I am learning.</p>
-    <a class="button-link" href="mailto:krishna.jain@example.com">request a CV ↗</a>
+    <p class="eyebrow">(As updated on August 2026)</p>
+    <h1><a class="cv-link" href={`${base}assets/krishna-jain-cv.pdf`} target="_blank" rel="noreferrer"><span class="cv-letter-c">C</span>urriculum <span class="cv-letter-v">V</span>itae<span>.</span></a></h1>
   </div>
 </BaseLayout>

@@ -1,5 +1,5 @@
 ---
-title: Rubik's Cube Solver based on a custom two-phase algorithm
+title: Rubik's Cube Solver based on a custom two-phase algorithm (Self)
 summary: A self-directed Rubik's Cube solver using an edge-first, corner-second strategy, heuristic search, and pruning.
 year: 2026
 tags: [algorithms, IDA*, C++]

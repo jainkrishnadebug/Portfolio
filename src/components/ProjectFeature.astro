@@ -1,30 +1,32 @@
 ---
+import { render } from 'astro:content';
+
 interface Props {
   entry: any;
 }
 
 const { entry } = Astro.props;
 const { data } = entry;
-const base = import.meta.env.BASE_URL;
+const { Content } = await render(entry);
+const videoId = data.videoUrl?.match(/[?&]v=([^&]+)/)?.[1] ?? null;
 ---
-<article class="project-feature">
-  <div class="project-feature-copy">
-    <div class="project-feature-meta">
-      <span>featured project</span>
-      <span>{data.year || 'ongoing'}</span>
+<article class="project-card" id={`project-${entry.id}`} tabindex="0" aria-expanded="false">
+  <div class="project-card-copy">
+    <h2>{data.title}</h2>
+    <p class="project-card-summary">{data.summary}</p>
+    <div class="project-card-details" hidden>
+      {videoId && data.videoUrl && <a class="project-video-preview" href={data.videoUrl} target="_blank" rel="noreferrer" aria-label={`Watch ${data.title} on YouTube`}>
+        <img src={`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`} alt={`Preview of ${data.title} video`} loading="lazy" />
+        <span class="project-video-play" aria-hidden="true">▶</span>
+      </a>}
+      <Content />
     </div>
-    <h2><a href={`${base}projects/${entry.id}/`}>{data.title}</a></h2>
-    <p class="project-feature-summary">{data.summary}</p>
-    {data.highlights.length > 0 && <ul class="project-highlights">{data.highlights.slice(0, 3).map((highlight: string) => <li>{highlight}</li>)}</ul>}
-    <div class="project-feature-actions">
-      <a class="button-link" href={`${base}projects/${entry.id}/`}>read project ↗</a>
-      {data.githubUrl && <a class="text-action" href={data.githubUrl} target="_blank" rel="noreferrer">code ↗</a>}
-      {data.paperUrl && <a class="text-action" href={data.paperUrl} target="_blank" rel="noreferrer">paper ↗</a>}
-    </div>
+    {data.tags.length > 0 && <div class="project-card-tags" aria-label="Project tags">{data.tags.map((tag: string) => <span>{tag}</span>)}</div>}
   </div>
-  <div class="project-feature-media" aria-label={`${data.title} visual summary`}>
-    {data.image ? <img src={data.image} alt="" /> : <div class="cube-visual" aria-hidden="true"><span class="cube-face cube-face-top"></span><span class="cube-face cube-face-left"></span><span class="cube-face cube-face-right"></span></div>}
-    <div class="project-feature-media-label"><span>{data.status}</span><span>{data.tags[0] || 'engineering'}</span></div>
-  </div>
-  <div class="project-feature-tags">{data.tags.map((tag: string) => <span>{tag}</span>)}</div>
+  <nav class="project-card-links" aria-label={`${data.title} links`}>
+    {data.videoUrl ? <a href={data.videoUrl} target="_blank" rel="noreferrer"><span>YT video</span><span aria-hidden="true">↗</span></a> : <span class="project-card-link is-empty"><span>YT video</span><span aria-hidden="true">↗</span></span>}
+    {data.githubUrl ? <a href={data.githubUrl} target="_blank" rel="noreferrer"><span>code</span><span aria-hidden="true">↗</span></a> : <span class="project-card-link is-empty"><span>code</span><span aria-hidden="true">↗</span></span>}
+    {data.paperUrl ? <a href={data.paperUrl} target="_blank" rel="noreferrer"><span>paper</span><span aria-hidden="true">↗</span></a> : <span class="project-card-link is-empty"><span>paper</span><span aria-hidden="true">↗</span></span>}
+    {data.externalUrl ? <a class="project-card-detail" href={data.externalUrl} target="_blank" rel="noreferrer"><span>live</span><span aria-hidden="true">↗</span></a> : <span class="project-card-link project-card-detail is-empty"><span>live</span><span aria-hidden="true">↗</span></span>}
+  </nav>
 </article>

@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import LegoGreeting from '../components/LegoGreeting.astro';
+import { getCollection } from 'astro:content';
 
 interface Props {
   title?: string;
@@ -14,6 +15,12 @@ const {
 } = Astro.props;
 const base = import.meta.env.BASE_URL;
 const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/lego-greeting-0${index + 1}.webp`);
+const projectSearchData = (await getCollection('projects')).map(({ id, data }) => ({
+  title: data.title,
+  summary: data.summary,
+  tags: data.tags,
+  url: `${base}projects/#project-${id}`
+}));
 ---
 <!doctype html>
 <html lang="en">
@@ -27,7 +34,7 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
     {legoFrameUrls.map((href) => <link rel="preload" as="image" href={href} type="image/webp" />)}
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;600;700&family=Yatra+One&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;600;700&family=Yatra+One&display=swap" rel="stylesheet" />
   </head>
   <body>
     <div class="site-shell">
@@ -41,6 +48,7 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
       </footer>
     </div>
     <LegoGreeting />
+    <script type="application/json" id="project-search-data" set:html={JSON.stringify(projectSearchData)}></script>
 
     <script>
       const monthYear = document.querySelector('#month-year');
@@ -51,10 +59,213 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
 
       const searchDialog = document.querySelector<HTMLDialogElement>('#search-dialog');
       const searchInput = document.querySelector<HTMLInputElement>('#search-input');
+      const searchForm = document.querySelector<HTMLFormElement>('.search-form');
+      const searchResults = document.querySelector<HTMLElement>('#search-results');
       const searchTrigger = document.querySelector<HTMLButtonElement>('.search-trigger');
       const closeSearch = () => searchDialog?.close();
+      const assetBase = import.meta.env.BASE_URL;
+      let pagefind: any = null;
+      let pagefindLoading: Promise<any> | null = null;
+      const localSearchData = JSON.parse(document.querySelector('#project-search-data')?.textContent || '[]');
+      const searchHistoryKey = 'krishna-portfolio-search-history';
+      let searchHistory: string[] = [];
+      try {
+        searchHistory = JSON.parse(localStorage.getItem(searchHistoryKey) || '[]');
+      } catch { searchHistory = []; }
+      const saveSearch = (query: string) => {
+        const value = query.trim();
+        if (!value) return;
+        searchHistory = [value, ...searchHistory.filter((item) => item.toLowerCase() !== value.toLowerCase())].slice(0, 5);
+        localStorage.setItem(searchHistoryKey, JSON.stringify(searchHistory));
+      };
+      let searchFocusIndex = -1;
+      const loadPagefind = async () => {
+        if (pagefind) return pagefind;
+        pagefindLoading ||= import(/* @vite-ignore */ `${assetBase}pagefind/pagefind.js`).then(async (module) => {
+          pagefind = module.default || module;
+          await pagefind.init();
+          return pagefind;
+        });
+        return pagefindLoading;
+      };
+      const showRandomRecommendation = () => {
+        if (!searchResults || !localSearchData.length) return;
+        const project = localSearchData[Math.floor(Math.random() * localSearchData.length)];
+        searchResults.innerHTML = '';
+        const label = document.createElement('p');
+        label.className = 'search-status';
+        label.textContent = 'No match — try this project instead:';
+        const link = document.createElement('a');
+        link.className = 'search-result';
+        link.href = project.url;
+        const title = document.createElement('strong');
+        title.textContent = project.title;
+        const excerpt = document.createElement('span');
+        excerpt.textContent = project.summary;
+        link.append(title, excerpt);
+        searchResults.append(label, link);
+      };
+      const renderSearchHistory = () => {
+        if (!searchResults) return;
+        searchResults.innerHTML = '';
+        if (!searchHistory.length) return;
+        const label = document.createElement('p');
+        label.className = 'search-status';
+        label.textContent = 'recent searches';
+        searchResults.append(label);
+        searchHistory.forEach((query) => {
+          const button = document.createElement('button');
+          button.className = 'search-history-item';
+          button.type = 'button';
+          button.textContent = query;
+          button.addEventListener('click', () => {
+            if (!searchInput) return;
+            searchInput.value = query;
+            void renderSearchResults(query);
+          });
+          searchResults.append(button);
+        });
+      };
+      const renderLocalResults = (query: string) => {
+        if (!searchResults) return;
+        const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+        const results = localSearchData
+          .filter((project: any) => {
+            const haystack = `${project.title} ${project.summary} ${(project.tags || []).join(' ')}`.toLowerCase();
+            return terms.every((term: string) => haystack.includes(term));
+          })
+          .slice(0, 8);
+        searchResults.innerHTML = '';
+        if (!results.length) {
+          showRandomRecommendation();
+          return;
+        }
+        results.forEach((project: any) => {
+          const link = document.createElement('a');
+          link.className = 'search-result';
+          link.href = project.url;
+          const title = document.createElement('strong');
+          title.textContent = project.title;
+          const excerpt = document.createElement('span');
+          excerpt.textContent = project.summary;
+          link.append(title, excerpt);
+          searchResults.append(link);
+        });
+        searchFocusIndex = -1;
+      };
+      const renderSearchResults = async (query: string) => {
+        if (!searchResults) return;
+        if (!query.trim()) {
+          searchFocusIndex = -1;
+          renderSearchHistory();
+          return;
+        }
+        searchResults.innerHTML = '<p class="search-status">searching...</p>';
+        try {
+          const index = await loadPagefind();
+          const response = await index.search(query);
+          const activeTitles = new Set(localSearchData.map((project: any) => project.title));
+          const results = (await Promise.all(response.results.map((result: any) => result.data())))
+            .filter((result: any) => activeTitles.has(result.meta?.title))
+            .slice(0, 8);
+          searchResults.innerHTML = '';
+          if (!results.length) {
+            renderLocalResults(query);
+            return;
+          }
+          results.forEach((result: any) => {
+            const link = document.createElement('a');
+            link.className = 'search-result';
+            const title = document.createElement('strong');
+            title.textContent = result.meta?.title || 'Untitled project';
+            const currentProject = localSearchData.find((project: any) => project.title === title.textContent);
+            link.href = currentProject?.url || result.url;
+            const excerpt = document.createElement('span');
+            excerpt.innerHTML = result.excerpt || '';
+            link.append(title, excerpt);
+            searchResults.append(link);
+          });
+          searchFocusIndex = -1;
+        } catch {
+          renderLocalResults(query);
+        }
+      };
+      const focusSearchResult = (direction: number) => {
+        if (!searchResults) return;
+        const items = [...searchResults.querySelectorAll<HTMLElement>('.search-result, .search-history-item')];
+        if (!items.length) return;
+        searchFocusIndex = (searchFocusIndex + direction + items.length) % items.length;
+        items[searchFocusIndex].focus();
+      };
+      searchInput?.addEventListener('input', () => { searchFocusIndex = -1; void renderSearchResults(searchInput.value); });
+      searchInput?.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          focusSearchResult(event.key === 'ArrowDown' ? 1 : -1);
+        }
+      });
+      searchForm?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        saveSearch(searchInput?.value || '');
+        void renderSearchResults(searchInput?.value || '');
+      });
+      searchResults?.addEventListener('click', (event) => {
+        const result = (event.target as HTMLElement).closest('.search-result');
+        if (result) {
+          saveSearch(searchInput?.value || result.textContent || '');
+          closeSearch();
+        }
+      });
+      searchResults?.addEventListener('keydown', (event) => {
+        if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+          event.preventDefault();
+          focusSearchResult(event.key === 'ArrowDown' ? 1 : -1);
+        }
+      });
+      const projectCards = [...document.querySelectorAll<HTMLElement>('.project-card')];
+      const toggleProjectCard = (card: HTMLElement) => {
+        const details = card.querySelector<HTMLElement>('.project-card-details');
+        if (!details) return;
+        details.hidden = !details.hidden;
+        card.setAttribute('aria-expanded', String(!details.hidden));
+      };
+      projectCards.forEach((card, index) => {
+        card.addEventListener('click', (event) => {
+          if ((event.target as HTMLElement).closest('a, button')) return;
+          toggleProjectCard(card);
+        });
+        card.addEventListener('keydown', (event: KeyboardEvent) => {
+          if (event.key === 'ArrowDown' || event.key === 'ArrowRight') {
+            event.preventDefault();
+            projectCards[Math.min(index + 1, projectCards.length - 1)]?.focus();
+          } else if (event.key === 'ArrowUp' || event.key === 'ArrowLeft') {
+            event.preventDefault();
+            projectCards[Math.max(index - 1, 0)]?.focus();
+          } else if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            toggleProjectCard(card);
+          } else if (event.key === 'Home') {
+            event.preventDefault();
+            projectCards[0]?.focus();
+          } else if (event.key === 'End') {
+            event.preventDefault();
+            projectCards[projectCards.length - 1]?.focus();
+          }
+        });
+      });
+      const projectFromHash = window.location.hash
+        ? document.querySelector<HTMLElement>(window.location.hash)
+        : null;
+      if (projectFromHash?.classList.contains('project-card')) {
+        const details = projectFromHash.querySelector<HTMLElement>('.project-card-details');
+        if (details) details.hidden = false;
+        projectFromHash.setAttribute('aria-expanded', 'true');
+        window.setTimeout(() => projectFromHash.scrollIntoView({ behavior: 'smooth', block: 'center' }), 40);
+      }
       searchTrigger?.addEventListener('click', () => {
         if (searchDialog && !searchDialog.open) searchDialog.showModal();
+        if (searchInput?.value.trim()) void renderSearchResults(searchInput.value);
+        else renderSearchHistory();
         window.setTimeout(() => searchInput?.focus(), 40);
       });
       document.querySelector('.dialog-close')?.addEventListener('click', closeSearch);
@@ -67,6 +278,23 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
       });
 
       const introTrigger = document.querySelector<HTMLElement>('#profile-intro-trigger');
+      const copyEmailButton = document.querySelector<HTMLButtonElement>('[data-copy-email]');
+      copyEmailButton?.addEventListener('click', async () => {
+        const email = copyEmailButton.dataset.copyEmail || '';
+        try {
+          await navigator.clipboard.writeText(email);
+          copyEmailButton.classList.add('is-copied');
+          copyEmailButton.setAttribute('aria-label', 'Email copied');
+          copyEmailButton.setAttribute('title', 'Email copied');
+          window.setTimeout(() => {
+            copyEmailButton.classList.remove('is-copied');
+            copyEmailButton.setAttribute('aria-label', 'Copy email');
+            copyEmailButton.setAttribute('title', 'Copy email');
+          }, 1400);
+        } catch {
+          copyEmailButton.setAttribute('aria-label', email);
+        }
+      });
       const profilePhoto = document.querySelector<HTMLElement>('#profile-photo');
       let portraitIndex = 0;
       const flipPortrait = () => {
@@ -100,13 +328,12 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
         greetingTrigger.classList.add('quadrant-warm');
         window.addEventListener('pointermove', (event) => updateGreetingQuadrant(event.clientX, event.clientY), { passive: true });
       }
-      const assetBase = import.meta.env.BASE_URL;
       const greetingImages: Array<[string, number]> = [
-        [`${assetBase}assets/lego-greeting-01.webp`, 75], [`${assetBase}assets/lego-greeting-02.webp`, 125],
+        [`${assetBase}assets/lego-greeting-01.webp`, 50], [`${assetBase}assets/lego-greeting-02.webp`, 150],
         [`${assetBase}assets/lego-greeting-03.webp`, 100], [`${assetBase}assets/lego-greeting-04.webp`, 100],
-        [`${assetBase}assets/lego-greeting-05.webp`, 450], [`${assetBase}assets/lego-greeting-04.webp`, 75],
+        [`${assetBase}assets/lego-greeting-05.webp`, 250], [`${assetBase}assets/lego-greeting-04.webp`, 75],
         [`${assetBase}assets/lego-greeting-03.webp`, 75], [`${assetBase}assets/lego-greeting-02.webp`, 75],
-        [`${assetBase}assets/lego-greeting-01.webp`, 60]
+        [`${assetBase}assets/lego-greeting-01.webp`, 50]
       ];
       const greetingFrames = greeting ? [...greeting.querySelectorAll<HTMLImageElement>('.lego-frame')] : [];
       const greetingReady = Promise.all(greetingFrames.map((frame) => frame.decode().catch(() => undefined)));
@@ -126,7 +353,7 @@ const legoFrameUrls = Array.from({ length: 5 }, (_, index) => `${base}assets/leg
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
           const speech = new SpeechSynthesisUtterance('hi');
-          speech.rate = 1.00;
+          speech.rate = 0.7;
           speech.pitch = 0.1;
           speech.volume = 0.50;
           window.speechSynthesis.speak(speech);

@@ -20,9 +20,6 @@ npm run build
 Create one Markdown file per entry in one of these folders:
 
 - `src/content/projects/`
-- `src/content/papers/`
-- `src/content/opensource/`
-- `src/content/videos/`
 
 Example project:
 

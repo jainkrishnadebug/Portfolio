@@ -2,9 +2,6 @@
 const links = [
   { href: '', label: 'about' },
   { href: 'projects/', label: 'projects' },
-  { href: 'papers/', label: 'papers' },
-  { href: 'opensource/', label: 'open source' },
-  { href: 'videos/', label: 'videos' },
   { href: 'cv/', label: 'cv' }
 ];
 const currentPath = Astro.url.pathname;
@@ -32,9 +29,10 @@ const base = import.meta.env.BASE_URL;
     <div class="dialog-topline"><span id="search-title">quick search</span><button class="dialog-close" type="button" aria-label="Close search">esc</button></div>
     <form class="search-form" method="dialog" action={`${base}projects/`}>
       <label class="sr-only" for="search-input">Search the site</label>
-      <input id="search-input" type="search" name="q" placeholder="Search projects, papers..." autocomplete="off" />
+      <input id="search-input" type="search" name="q" placeholder="Search projects..." autocomplete="off" />
       <button type="submit" aria-label="Search">↗</button>
     </form>
-    <p class="search-hint">Try <span>projects</span>, <span>papers</span>, or a tag.</p>
+    <p class="search-hint">Searches inside <span>PROJECTS</span>.</p>
+    <div class="search-results" id="search-results" aria-live="polite"></div>
   </div>
 </dialog>
