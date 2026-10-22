@@ -297,6 +297,36 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
       });
       const profilePhoto = document.querySelector<HTMLElement>('#profile-photo');
       let portraitIndex = 0;
+      let flipAudioContext: AudioContext | null = null;
+      const playPhotoFlipSound = () => {
+        const AudioContextClass = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContextClass) return;
+        flipAudioContext ||= new AudioContextClass();
+        const context = flipAudioContext;
+        void context.resume();
+        const duration = 0.2;
+        const buffer = context.createBuffer(1, Math.floor(context.sampleRate * duration), context.sampleRate);
+        const samples = buffer.getChannelData(0);
+        for (let index = 0; index < samples.length; index += 1) {
+          const fade = 1 - index / samples.length;
+          samples[index] = (Math.random() * 2 - 1) * fade;
+        }
+        const noise = context.createBufferSource();
+        const filter = context.createBiquadFilter();
+        const gain = context.createGain();
+        const now = context.currentTime;
+        noise.buffer = buffer;
+        filter.type = 'bandpass';
+        filter.Q.setValueAtTime(0.7, now);
+        filter.frequency.setValueAtTime(1800, now);
+        filter.frequency.exponentialRampToValueAtTime(420, now + duration);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.16, now + 0.018);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+        noise.connect(filter).connect(gain).connect(context.destination);
+        noise.start(now);
+        noise.stop(now + duration);
+      };
       const flipPortrait = () => {
         if (!profilePhoto) return;
         portraitIndex = (portraitIndex + 1) % 3;
@@ -304,6 +334,7 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
         if (portraitIndex > 0) profilePhoto.classList.add(`photo-index-${portraitIndex}`);
         const frameNumber = profilePhoto.querySelector('.frame-number');
         if (frameNumber) frameNumber.textContent = `[ ${String(portraitIndex + 1).padStart(3, '0')} ]`;
+        playPhotoFlipSound();
       };
       profilePhoto?.addEventListener('click', flipPortrait);
       introTrigger?.addEventListener('click', flipPortrait);
