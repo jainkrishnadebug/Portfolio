@@ -357,16 +357,41 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
       const greetingTrigger = document.querySelector<HTMLElement>('.hero-greeting');
       const greeting = document.querySelector<HTMLElement>('.lego-greeting');
       const brand = document.querySelector<HTMLAnchorElement>('.brand');
-      const updateGreetingQuadrant = (x: number, y: number) => {
+      type GreetingColor = [number, number, number];
+      const greetingGrid: GreetingColor[][] = [
+        [[22, 115, 75], [109, 75, 194], [197, 59, 47], [126, 47, 149]],
+        [[47, 127, 157], [197, 59, 47], [122, 62, 126], [37, 79, 158]],
+        [[122, 59, 140], [27, 23, 20], [22, 115, 75], [32, 95, 168]]
+      ];
+      const mixColor = (from: GreetingColor, to: GreetingColor, amount: number): GreetingColor => [
+        Math.round(from[0] + (to[0] - from[0]) * amount),
+        Math.round(from[1] + (to[1] - from[1]) * amount),
+        Math.round(from[2] + (to[2] - from[2]) * amount)
+      ];
+      const colorValue = (color: GreetingColor) => `rgb(${color.join(', ')})`;
+      const updateGreetingGrid = (x: number, y: number) => {
         if (!greetingTrigger) return;
-        const cool = (x < window.innerWidth / 2 && y < window.innerHeight / 2)
-          || (x >= window.innerWidth / 2 && y >= window.innerHeight / 2);
-        greetingTrigger.classList.toggle('quadrant-cool', cool);
-        greetingTrigger.classList.toggle('quadrant-warm', !cool);
+        const columns = greetingGrid[0].length;
+        const rows = greetingGrid.length;
+        const gridX = Math.max(0, Math.min(columns - 1, (x / Math.max(1, window.innerWidth)) * columns - 0.5));
+        const gridY = Math.max(0, Math.min(rows - 1, (y / Math.max(1, window.innerHeight)) * rows - 0.5));
+        const left = Math.floor(gridX);
+        const top = Math.floor(gridY);
+        const right = Math.min(columns - 1, left + 1);
+        const bottom = Math.min(rows - 1, top + 1);
+        const xAmount = gridX - left;
+        const yAmount = gridY - top;
+        const topColor = mixColor(greetingGrid[top][left], greetingGrid[top][right], xAmount);
+        const bottomColor = mixColor(greetingGrid[bottom][left], greetingGrid[bottom][right], xAmount);
+        const mainColor = mixColor(topColor, bottomColor, yAmount);
+        const accentColor = mixColor(mainColor, [255, 179, 107], 0.34);
+        greetingTrigger.style.setProperty('--greeting-main-color', colorValue(mainColor));
+        greetingTrigger.style.setProperty('--greeting-accent-color', colorValue(accentColor));
+        greetingTrigger.dataset.gridCell = `${top + 1}-${left + 1}`;
       };
       if (greetingTrigger) {
-        greetingTrigger.classList.add('quadrant-warm');
-        window.addEventListener('pointermove', (event) => updateGreetingQuadrant(event.clientX, event.clientY), { passive: true });
+        updateGreetingGrid(window.innerWidth / 2, window.innerHeight / 2);
+        window.addEventListener('pointermove', (event) => updateGreetingGrid(event.clientX, event.clientY), { passive: true });
       }
       const greetingImages: Array<[string, number]> = [
         [`${assetBase}assets/lego-greeting-01.webp`, 50], [`${assetBase}assets/lego-greeting-02.webp`, 150],
