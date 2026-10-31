@@ -403,7 +403,7 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
       const greetingFrames = greeting ? [...greeting.querySelectorAll<HTMLImageElement>('.lego-frame')] : [];
       const greetingReady = Promise.all(greetingFrames.map((frame) => frame.decode().catch(() => undefined)));
       let greetingRunning = false;
-      const playGreeting = async () => {
+      const playGreeting = async (speak = true) => {
         if (!greeting || greetingRunning) return;
         greetingRunning = true;
         await greetingReady;
@@ -415,7 +415,7 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
         brand?.classList.add('is-greeting-active');
         window.setTimeout(() => brand?.classList.remove('is-greeting-active'), 500);
         greetingTrigger?.classList.add('is-vibrating');
-        if ('speechSynthesis' in window) {
+        if (speak && 'speechSynthesis' in window) {
           window.speechSynthesis.cancel();
           const speech = new SpeechSynthesisUtterance('hi');
           speech.rate = 0.7;
@@ -437,6 +437,13 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
         if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); playGreeting(); }
       });
       brand?.addEventListener('click', (event) => { event.preventDefault(); playGreeting(); });
+      const autoGreetingKey = 'krishna-portfolio-auto-greeting-played';
+      let shouldAutoPlay = true;
+      try {
+        shouldAutoPlay = sessionStorage.getItem(autoGreetingKey) !== 'true';
+        if (shouldAutoPlay) sessionStorage.setItem(autoGreetingKey, 'true');
+      } catch { shouldAutoPlay = true; }
+      if (shouldAutoPlay) window.setTimeout(() => { void playGreeting(false); }, 550);
     </script>
   </body>
 </html>
