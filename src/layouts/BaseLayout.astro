@@ -296,6 +296,7 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
         }
       });
       const profilePhoto = document.querySelector<HTMLElement>('#profile-photo');
+      const photoDots = [...document.querySelectorAll<HTMLButtonElement>('.photo-dot')];
       let portraitIndex = 0;
       let flipAudioContext: AudioContext | null = null;
       const playPhotoFlipSound = () => {
@@ -327,17 +328,25 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
         noise.start(now);
         noise.stop(now + duration);
       };
-      const flipPortrait = () => {
+      const setPortrait = (nextIndex: number, playSound = true) => {
         if (!profilePhoto) return;
-        portraitIndex = (portraitIndex + 1) % 3;
+        portraitIndex = nextIndex;
         profilePhoto.classList.remove('photo-index-1', 'photo-index-2');
         if (portraitIndex > 0) profilePhoto.classList.add(`photo-index-${portraitIndex}`);
-        const frameNumber = profilePhoto.querySelector('.frame-number');
-        if (frameNumber) frameNumber.textContent = `[ ${String(portraitIndex + 1).padStart(3, '0')} ]`;
-        playPhotoFlipSound();
+        photoDots.forEach((dot, index) => {
+          const active = index === portraitIndex;
+          dot.classList.toggle('is-active', active);
+          dot.setAttribute('aria-selected', String(active));
+        });
+        if (playSound) playPhotoFlipSound();
       };
+      const flipPortrait = () => setPortrait((portraitIndex + 1) % 3);
       profilePhoto?.addEventListener('click', flipPortrait);
       introTrigger?.addEventListener('click', flipPortrait);
+      photoDots.forEach((dot) => dot.addEventListener('click', (event) => {
+        event.stopPropagation();
+        setPortrait(Number(dot.dataset.photoIndex || 0));
+      }));
       [profilePhoto, introTrigger].forEach((element) => element?.addEventListener('keydown', (event: KeyboardEvent) => {
         if (event.key === 'Enter' || event.key === ' ') {
           event.preventDefault();

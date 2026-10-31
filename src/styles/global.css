@@ -89,7 +89,10 @@ main { flex: 1; }
 .photo-frame.photo-index-2 .photo-card-formal { z-index: 1; transform: rotate(-4deg) translate(-13px, 10px) scale(.96); }
 .photo-frame.photo-index-2 .photo-card-third { z-index: 2; transform: rotate(0deg) translate(0, 0) scale(1); }
 .profile-portrait { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center top; }
-.frame-number { position: relative; z-index: 4; margin: 12px 0 0; text-align: right; color: var(--red); font: 9px var(--mono); }
+.photo-dots { display: flex; justify-content: center; gap: 8px; margin: 14px auto 0; transform: rotate(-2deg); }
+.photo-dot { width: 9px; height: 9px; padding: 0; border: 1px solid var(--ink); border-radius: 50%; background: rgba(255,255,255,.58); cursor: pointer; transition: transform .2s ease, background .2s ease, box-shadow .2s ease; }
+.photo-dot:hover, .photo-dot:focus-visible { transform: scale(1.35); outline: none; box-shadow: 0 0 0 3px rgba(197,59,47,.18); }
+.photo-dot.is-active { background: var(--red); border-color: var(--red); box-shadow: 0 0 0 3px rgba(197,59,47,.16); }
 .social-card { order: -1; align-self: flex-end; width: fit-content; max-width: 100%; margin: 0 0 24px; padding: 14px 16px; border: 1px solid var(--ink); border-radius: 18px; background: linear-gradient(135deg, #fff 0%, #fff7c7 58%, #ffe58a 100%); box-shadow: 6px 7px 0 rgba(128,83,25,.28); }
 .social-links { display: flex; gap: 13px; flex-wrap: wrap; align-items: center; }
 .social-links a { border-bottom: 1px solid transparent; }
@@ -98,19 +101,20 @@ main { flex: 1; }
 .social-links a:hover .social-icon, .social-links a:focus-visible .social-icon, .social-links a:hover .social-brand-image, .social-links a:focus-visible .social-brand-image { color: var(--purple); opacity: .72; transform: translateY(-2px) scale(1.08); }
 .social-links a:hover, .social-links a:focus-visible { color: var(--purple); border-color: var(--purple); outline: none; }
 .social-link-github:hover, .social-link-github:focus-visible { color: #24292f !important; border-color: #24292f !important; }
-.social-link-instagram:hover, .social-link-instagram:focus-visible { color: #e1306c !important; border-color: #e1306c !important; }
+.social-link-project-euler:hover, .social-link-project-euler:focus-visible { color: #b87916 !important; border-color: #b87916 !important; }
 .social-link-linkedin:hover, .social-link-linkedin:focus-visible { color: #0a66c2 !important; border-color: #0a66c2 !important; }
 .social-link-youtube:hover, .social-link-youtube:focus-visible { color: #ff0000 !important; border-color: #ff0000 !important; }
 .social-link-kaggle:hover, .social-link-kaggle:focus-visible { color: #20beff !important; border-color: #20beff !important; }
 .social-link-leetcode:hover, .social-link-leetcode:focus-visible { color: #ffa116 !important; border-color: #ffa116 !important; }
 .social-link-atcoder:hover, .social-link-atcoder:focus-visible { color: #111 !important; border-color: #111 !important; }
 .social-link-github:hover .social-icon, .social-link-github:focus-visible .social-icon { color: #24292f !important; opacity: 1; }
-.social-link-instagram:hover .social-icon, .social-link-instagram:focus-visible .social-icon { color: #e1306c !important; opacity: 1; }
 .social-link-linkedin:hover .social-icon, .social-link-linkedin:focus-visible .social-icon { color: #0a66c2 !important; opacity: 1; }
 .social-link-youtube:hover .social-icon, .social-link-youtube:focus-visible .social-icon { color: #ff0000 !important; opacity: 1; }
 .social-link-kaggle:hover .social-icon, .social-link-kaggle:focus-visible .social-icon { color: #20beff !important; opacity: 1; }
 .social-link-leetcode:hover .social-icon, .social-link-leetcode:focus-visible .social-icon { color: #ffa116 !important; opacity: 1; }
 .social-link-atcoder:hover .social-brand-image, .social-link-atcoder:focus-visible .social-brand-image { filter: brightness(0) saturate(100%); opacity: 1 !important; }
+.social-text-icon { display: block; width: 25px; height: 25px; color: currentColor; font: 700 27px/.84 Georgia, serif; text-align: center; transition: transform .2s ease, color .2s ease; }
+.social-links a:hover .social-text-icon, .social-links a:focus-visible .social-text-icon { transform: translateY(-2px) scale(1.08); }
 .site-footer { display: flex; justify-content: space-between; align-items: center; gap: 18px; padding: 24px 0; border-top: 1px solid var(--line); color: var(--muted); font: 10px var(--mono); text-transform: uppercase; }
 .footer-note { color: rgba(121,87,74,.65); }
 .lego-greeting { position: fixed; z-index: 20; left: 0; bottom: 0; width: min(250px, 26vw); aspect-ratio: 449 / 576; pointer-events: none; visibility: hidden; opacity: 0; transform: translate(-100%, 0); transition: transform .45s cubic-bezier(.22,.8,.28,1), opacity .2s ease, visibility 0s linear .2s; }

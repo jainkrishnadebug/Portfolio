@@ -48,7 +48,11 @@ const portraits = [
       <SocialLinks />
       <div class="photo-frame" id="profile-photo" role="button" tabindex="0" aria-label="Switch portrait">
         {portraits.map((portrait) => <div class:list={['photo-placeholder', 'photo-card', portrait.className]}><img class="profile-portrait" src={portrait.src} alt={portrait.alt} decoding="async" /></div>)}
-        <span class="frame-number">[ 001 ]</span>
+      </div>
+      <div class="photo-dots" role="tablist" aria-label="Choose profile photo">
+        <button class="photo-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show cadet photo" data-photo-index="0"></button>
+        <button class="photo-dot" type="button" role="tab" aria-selected="false" aria-label="Show formal portrait" data-photo-index="1"></button>
+        <button class="photo-dot" type="button" role="tab" aria-selected="false" aria-label="Show outdoor portrait" data-photo-index="2"></button>
       </div>
     </aside>
   </div>
