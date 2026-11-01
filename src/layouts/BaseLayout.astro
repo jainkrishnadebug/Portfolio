@@ -37,8 +37,7 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Mono:wght@400;500&family=Noto+Sans+Devanagari:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@400;600;700&family=Yatra+One&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div class="indian-ornament indian-ornament-left" aria-hidden="true"><img src={`${base}assets/mandala.svg`} alt="" /></div>
-    <div class="indian-ornament indian-ornament-right" aria-hidden="true"><img src={`${base}assets/mandala.svg`} alt="" /></div>
+    <div class="jaal-overlay" aria-hidden="true"></div>
     <div class="site-shell">
       <Header />
       <main>
