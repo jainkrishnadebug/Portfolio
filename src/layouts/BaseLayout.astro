@@ -44,21 +44,11 @@ const projectSearchData = (await getCollection('projects')).map(({ id, data }) =
       <main>
         <slot />
       </main>
-      <footer class="site-footer">
-        <span>@ <span id="month-year"></span></span>
-        <span class="footer-note">built with curiosity</span>
-      </footer>
     </div>
     <LegoGreeting />
     <script type="application/json" id="project-search-data" set:html={JSON.stringify(projectSearchData)}></script>
 
     <script>
-      const monthYear = document.querySelector('#month-year');
-      if (monthYear) {
-        monthYear.textContent = new Intl.DateTimeFormat('en-US', { month: 'long', year: 'numeric' })
-          .format(new Date()).replace(' ', '_');
-      }
-
       const searchDialog = document.querySelector<HTMLDialogElement>('#search-dialog');
       const searchInput = document.querySelector<HTMLInputElement>('#search-input');
       const searchForm = document.querySelector<HTMLFormElement>('.search-form');
