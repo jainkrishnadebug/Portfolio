@@ -1,28 +1,28 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none">
   <defs>
-    <g id="small-flower" stroke="#a87320" stroke-width="1.2" stroke-linejoin="round">
-      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28"/>
-      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(72)"/>
-      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(144)"/>
-      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(216)"/>
-      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(288)"/>
+    <g id="small-flower" stroke="#e5c879" stroke-width="1.2" stroke-linejoin="round">
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#fffaf0"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#fffaf0" transform="rotate(72)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#fffaf0" transform="rotate(144)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#fffaf0" transform="rotate(216)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#fffaf0" transform="rotate(288)"/>
       <circle r="4.5" fill="#fff0af"/>
     </g>
-    <g id="large-flower" stroke="#a87320" stroke-width="1.35" stroke-linejoin="round">
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(45)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(90)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(135)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(180)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(225)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(270)"/>
-      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(315)"/>
+    <g id="large-flower" stroke="#e5c879" stroke-width="1.35" stroke-linejoin="round">
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(45)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(90)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(135)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(180)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(225)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(270)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#fffdf4" transform="rotate(315)"/>
       <circle r="7" fill="#fff0af"/>
-      <circle r="3" fill="#a87320"/>
+      <circle r="3" fill="#e5c879"/>
     </g>
   </defs>
 
-  <g stroke="#a87320" stroke-width="1.4" opacity=".52" stroke-linecap="round">
+  <g stroke="#fff8e6" stroke-width="1.4" opacity=".62" stroke-linecap="round">
     <path d="M0 45C18 20 27 20 45 45S72 70 90 45s27-25 45 0 27 25 45 0"/>
     <path d="M0 135c18-25 27-25 45 0s27 25 45 0 27-25 45 0 27 25 45 0"/>
     <path d="M45 0c-25 18-25 27 0 45s25 27 0 45-25 27 0 45 25 27 0 45"/>
