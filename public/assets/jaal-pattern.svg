@@ -1,21 +1,36 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144" fill="none">
-  <g stroke="#9b651d" stroke-width="1.45" stroke-linecap="round" stroke-linejoin="round" opacity=".3">
-    <defs>
-      <path id="petal" d="M72 72C51 65 43 47 53 31c6-10 13-17 19-23 6 6 13 13 19 23 10 16 2 34-19 41Z"/>
-      <path id="vine" d="M0 72C18 72 20 48 36 48s18 24 36 24 20-24 36-24 18 24 36 24"/>
-    </defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="180" height="180" viewBox="0 0 180 180" fill="none">
+  <defs>
+    <g id="small-flower" stroke="#a87320" stroke-width="1.2" stroke-linejoin="round">
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(72)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(144)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(216)"/>
+      <ellipse cy="-13" rx="5.5" ry="13" fill="#d79c28" transform="rotate(288)"/>
+      <circle r="4.5" fill="#fff0af"/>
+    </g>
+    <g id="large-flower" stroke="#a87320" stroke-width="1.35" stroke-linejoin="round">
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(45)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(90)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(135)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(180)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(225)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(270)"/>
+      <ellipse cy="-22" rx="8" ry="22" fill="#c96a32" transform="rotate(315)"/>
+      <circle r="7" fill="#fff0af"/>
+      <circle r="3" fill="#a87320"/>
+    </g>
+  </defs>
 
-    <use href="#vine"/>
-    <use href="#vine" transform="rotate(90 72 72)"/>
-    <use href="#petal"/>
-    <use href="#petal" transform="rotate(90 72 72)"/>
-    <use href="#petal" transform="rotate(180 72 72)"/>
-    <use href="#petal" transform="rotate(270 72 72)"/>
-    <circle cx="72" cy="72" r="9"/>
-    <circle cx="72" cy="72" r="3" fill="#9b651d"/>
-    <circle cx="0" cy="0" r="16"/>
-    <circle cx="144" cy="0" r="16"/>
-    <circle cx="0" cy="144" r="16"/>
-    <circle cx="144" cy="144" r="16"/>
+  <g stroke="#a87320" stroke-width="1.4" opacity=".52" stroke-linecap="round">
+    <path d="M0 45C18 20 27 20 45 45S72 70 90 45s27-25 45 0 27 25 45 0"/>
+    <path d="M0 135c18-25 27-25 45 0s27 25 45 0 27-25 45 0 27 25 45 0"/>
+    <path d="M45 0c-25 18-25 27 0 45s25 27 0 45-25 27 0 45 25 27 0 45"/>
+    <path d="M135 0c-25 18-25 27 0 45s25 27 0 45-25 27 0 45 25 27 0 45"/>
   </g>
+
+  <g transform="translate(45 45)"><use href="#large-flower"/></g>
+  <g transform="translate(135 135)"><use href="#large-flower"/></g>
+  <g transform="translate(135 45)"><use href="#small-flower"/></g>
+  <g transform="translate(45 135)"><use href="#small-flower"/></g>
 </svg>
