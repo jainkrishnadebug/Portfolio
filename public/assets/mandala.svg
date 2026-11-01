@@ -1,14 +1,24 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" fill="none">
-  <g stroke="#c53b2f" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="120" cy="120" r="99" opacity=".72"/>
-    <circle cx="120" cy="120" r="88" opacity=".72"/>
-    <circle cx="120" cy="120" r="68"/>
-    <circle cx="120" cy="120" r="9"/>
-    <path d="M120 111c-20-25-20-47 0-61 20 14 20 36 0 61Zm0 18c20 25 20 47 0 61-20-14-20-36 0-61ZM111 120c-25-20-47-20-61 0 14 20 36 20 61 0Zm18 0c25 20 47 20 61 0-14-20-36-20-61 0Z"/>
-    <path d="M113 113c-28-9-45-25-43-45 20-2 36 15 45 43Zm14 14c28 9 45 25 43 45-20 2-36-15-45-43ZM113 127c-9 28-25 45-45 43-2-20 15-36 43-45Zm14-14c9-28 25-45 45-43 2 20-15 36-43 45Z"/>
-    <path d="M120 21v19m0 160v19M21 120h19m160 0h19M50 50l14 14m112 112 14 14M50 190l14-14M176 64l14-14" opacity=".8"/>
-    <path d="M120 4c5 7 5 12 0 17-5-5-5-10 0-17Zm0 215c5 7 5 12 0 17-5-5-5-10 0-17ZM4 120c7-5 12-5 17 0-5 5-10 5-17 0Zm215 0c7-5 12-5 17 0-5 5-10 5-17 0Z"/>
-    <path d="M74 31c7 4 9 9 6 15-6-3-8-8-6-15Zm92 178c7 4 9 9 6 15-6-3-8-8-6-15ZM31 166c4-7 9-9 15-6-3 6-8 8-15 6Zm178-92c4-7 9-9 15-6-3 6-8 8-15 6Z"/>
-    <circle cx="120" cy="120" r="3" fill="#c53b2f"/>
+  <g stroke="#c53b2f" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".58">
+    <circle cx="120" cy="120" r="92"/>
+    <circle cx="120" cy="120" r="72"/>
+    <defs>
+      <path id="petal" d="M120 120C92 108 82 82 96 58c9-16 17-25 24-33 7 8 15 17 24 33 14 24 4 50-24 62Z"/>
+      <path id="leaf" d="M120 27c-13-11-14-21 0-29 14 8 13 18 0 29Z"/>
+    </defs>
+    <use href="#petal"/>
+    <use href="#petal" transform="rotate(60 120 120)"/>
+    <use href="#petal" transform="rotate(120 120 120)"/>
+    <use href="#petal" transform="rotate(180 120 120)"/>
+    <use href="#petal" transform="rotate(240 120 120)"/>
+    <use href="#petal" transform="rotate(300 120 120)"/>
+    <use href="#leaf"/>
+    <use href="#leaf" transform="rotate(60 120 120)"/>
+    <use href="#leaf" transform="rotate(120 120 120)"/>
+    <use href="#leaf" transform="rotate(180 120 120)"/>
+    <use href="#leaf" transform="rotate(240 120 120)"/>
+    <use href="#leaf" transform="rotate(300 120 120)"/>
+    <circle cx="120" cy="120" r="13" fill="#f4c542"/>
+    <circle cx="120" cy="120" r="5" fill="#c53b2f"/>
   </g>
 </svg>
