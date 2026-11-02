@@ -1,8 +1,7 @@
 name: Deploy to GitHub Pages
 
 on:
-  push:
-    branches: [main]
+  # Automatic deployment is disabled to prevent repeated Pages build errors.
   workflow_dispatch:
 
 permissions:
