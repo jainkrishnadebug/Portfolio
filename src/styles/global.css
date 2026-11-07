@@ -203,7 +203,7 @@ code { padding: 2px 5px; border-radius: 4px; background: rgba(255,255,255,.55); 
   .brand { min-width: auto; }
   .main-nav { order: 3; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; overflow: visible; padding: 4px; gap: 4px; scrollbar-width: none; }
   .main-nav::-webkit-scrollbar { display: none; }
-  .nav-link { width: 100%; padding: 10px 6px; text-align: center; }
+  .nav-link { display: flex; width: 100%; min-width: 0; align-items: center; justify-content: center; padding: 10px 6px; text-align: center; }
   .nav-link.is-active { font-size: 10px; }
   .search-trigger { margin-left: auto; }
   .about-layout { display: flex; flex-direction: column; align-items: stretch; gap: 48px; padding: 18px 0 65px; }
